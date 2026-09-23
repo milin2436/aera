@@ -1,112 +1,498 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privacy Policy &mdash; Aera Video Player</title>
+<title>Aera Video Player — an XR video player for Meta Quest</title>
+<meta name="description" content="Aera Video Player plays video on a screen that floats in the room around you. Panorama, fisheye and stereo formats, WebDAV and local sources, AR passthrough keying. No account, no analytics, no ads.">
+<meta name="theme-color" content="#0a0c11">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aera Video Player">
+<meta property="og:description" content="A screen for video that lives in your room. Panorama, fisheye and stereo formats; WebDAV and local sources; AR passthrough keying.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20rx='22'%20fill='%230a0c11'/%3E%3Crect%20x='20'%20y='29'%20width='60'%20height='36'%20rx='6'%20fill='none'%20stroke='%234c8dff'%20stroke-width='5'/%3E%3C/svg%3E">
+<script>
+  /* Honor the visitor's system colour scheme before first paint. Dark is the
+     default in the markup, so a no-JS viewer still gets a themed page. */
+  (function () {
+    if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  })();
+</script>
 <style>
+  :root {
+    color-scheme: dark light;
+    --bg:#0a0c11; --bg2:#0d1017;
+    --card:#121620; --card2:#161b28; --ink:#eef2fa; --mut:#8f9bb3;
+    --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.05);
+    --acc:#4c8dff; --acc2:#3ddbb4;
+    --accent-text:#9cc2ff;
+    --panel-bg:rgba(9,11,16,.86);
+    --nav-bg:rgba(10,12,17,.74);
+    --shadow:0 24px 70px rgba(0,0,0,.55);
+    --code-bg:rgba(255,255,255,.06);
+    --gloss:linear-gradient(112deg,rgba(255,255,255,.2),rgba(255,255,255,0) 58%);
+    --screen-a:#151d30; --screen-b:#243b70; --screen-c:#102a3a;
+    --scene-tint:rgba(255,255,255,.05);
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg:#f6f8fc; --bg2:#eef1f7;
+    --card:#ffffff; --card2:#f5f7fb; --ink:#0f1522; --mut:#5a6478;
+    --line:rgba(15,21,34,.12); --line2:rgba(15,21,34,.07);
+    --accent-text:#2160c8;
+    --panel-bg:rgba(255,255,255,.9);
+    --nav-bg:rgba(248,250,253,.86);
+    --shadow:0 20px 52px rgba(15,25,55,.16);
+    --code-bg:rgba(15,21,34,.05);
+    --gloss:linear-gradient(112deg,rgba(255,255,255,.75),rgba(255,255,255,0) 55%);
+    --screen-a:#d7e2f7; --screen-b:#9db9ef; --screen-c:#8fd0d8;
+    --scene-tint:rgba(15,21,34,.06);
+  }
+
+  *,*::before,*::after { box-sizing:border-box; }
+  html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
   body {
-    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    max-width: 46em;
-    margin: 3rem auto;
-    padding: 0 1.25rem;
-    color: #1a1a1a;
-    background: #fff;
+    margin:0; background:var(--bg); color:var(--ink);
+    font:400 16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Apple Color Emoji","Segoe UI Emoji",sans-serif;
+    -webkit-font-smoothing:antialiased;
   }
-  h1 { font-size: 1.55rem; line-height: 1.25; margin: 0 0 0.2rem; }
-  h2 {
-    font-size: 1.1rem;
-    margin: 1.8rem 0 0.5rem;
-    padding-bottom: 0.3rem;
-    border-bottom: 1px solid #e2e2e2;
+  h1,h2,h3,h4 { line-height:1.15; letter-spacing:-.021em; font-weight:650; }
+  p { margin:0; }
+  ul,ol,dl,figure { margin:0; }
+  a { color:inherit; }
+  ::selection { background:var(--acc); color:#fff; }
+  a:focus-visible,button:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+
+  .wrap { width:min(1140px,100% - 2.5rem); margin-inline:auto; }
+
+  /* ---------- nav ---------- */
+  .nav {
+    position:sticky; top:0; z-index:20;
+    border-bottom:1px solid var(--line2);
+    background:var(--nav-bg);
+    backdrop-filter:blur(14px) saturate(150%);
+    -webkit-backdrop-filter:blur(14px) saturate(150%);
   }
-  .updated { color: #666; font-size: 0.9rem; margin: 0 0 1.5rem; }
-  p { margin: 0 0 0.9rem; }
-  ul { margin: 0 0 0.9rem; padding-left: 1.4rem; }
-  li { margin: 0.2rem 0; }
-  strong { font-weight: 600; }
-  footer {
-    margin-top: 3rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e2e2e2;
-    font-size: 0.85rem;
-    color: #666;
+  .nav-in { display:flex; align-items:center; gap:1rem; height:60px; }
+  .brand { display:flex; align-items:center; gap:.55rem; text-decoration:none; font-weight:680; letter-spacing:-.01em; font-size:1rem; white-space:nowrap; }
+  .brand b { font-weight:700; }
+  .logo { width:19px; height:19px; border:2px solid var(--acc); border-radius:4px; display:grid; place-items:center; flex:none; }
+  .logo::after { content:""; width:5px; height:5px; background:var(--acc2); border-radius:1px; }
+  .nav ul { display:flex; gap:1.3rem; margin-left:auto; padding:0; list-style:none; }
+  .nav a { text-decoration:none; font-size:.9rem; color:var(--mut); transition:color .15s; }
+  .nav a:hover { color:var(--ink); }
+  .iconbtn {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border-radius:8px; border:1px solid var(--line);
+    background:transparent; color:var(--mut); font-size:1.05rem;
+    cursor:pointer; text-decoration:none; flex:none;
   }
-  code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.9em;
-    background: #f2f2f2;
-    padding: 0.1em 0.35em;
-    border-radius: 3px;
+  .iconbtn:hover { color:var(--ink); border-color:var(--acc); }
+
+  /* ---------- hero ---------- */
+  .hero { padding:5.5rem 0 4rem; position:relative; }
+  .hero-in { display:grid; grid-template-columns:1.02fr .98fr; gap:3.5rem; align-items:center; }
+  .tagline { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; margin-bottom:1.25rem; font-size:.8rem; letter-spacing:.09em; text-transform:uppercase; color:var(--mut); font-weight:600; }
+  .dot { width:6px; height:6px; border-radius:50%; background:var(--acc2); box-shadow:0 0 10px var(--acc2); }
+  h1.hero-title { font-size:clamp(2.55rem,6.1vw,4.55rem); letter-spacing:-.038em; margin:0 0 1.3rem; }
+  h1 .k {
+    background:linear-gradient(100deg,var(--acc),var(--acc2) 95%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .lede { font-size:1.2rem; line-height:1.62; color:var(--mut); max-width:34em; margin-bottom:2.1rem; }
+  .cta { display:flex; gap:.8rem; flex-wrap:wrap; }
+  .btn {
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:.82rem 1.3rem; border-radius:10px; border:1px solid transparent;
+    font-weight:640; font-size:.97rem; text-decoration:none;
+  }
+  .btn-primary { background:var(--acc); color:#fff; box-shadow:0 8px 24px rgba(76,141,255,.3); }
+  .btn-primary:hover { background:#659eff; }
+  .btn-ghost { border-color:var(--line); color:var(--ink); }
+  .btn-ghost:hover { border-color:var(--acc); }
+  .cta-note { font-size:.85rem; color:var(--mut); max-width:40em; }
+
+  /* ---------- scene ---------- */
+  .scene { display:grid; place-items:center; perspective:1150px; padding:1rem 0; }
+  .stage { position:relative; width:min(100%,432px); aspect-ratio:15/11; }
+  .beam {
+    position:absolute; left:50%; top:0; bottom:58%; width:2px;
+    transform:translateX(-50%) skewY(-19deg); transform-origin:bottom;
+    background:linear-gradient(to top,transparent,rgba(76,141,255,.5) 72%,transparent);
+  }
+  .beam:nth-of-type(1) { left:12%; }
+  .beam:nth-of-type(2) { left:88%; }
+  .screen { position:absolute; inset:0; transform-style:preserve-3d; transform:rotateY(-22deg) rotateX(8deg); }
+  .glass {
+    position:absolute; inset:0; border-radius:18px;
+    background:linear-gradient(152deg,var(--screen-a),var(--screen-b) 46%,var(--screen-c));
+    border:1px solid var(--line); box-shadow:var(--shadow); overflow:hidden;
+  }
+  .glass::after { content:""; position:absolute; inset:0; background:var(--gloss); }
+  .glow {
+    position:absolute; left:50%; top:50%; width:86%; height:58%;
+    transform:translate(-50%,-50%); border-radius:50%;
+    background:radial-gradient(50% 50% at 50% 50%,rgba(61,219,180,.5),transparent 70%);
+    filter:blur(5px);
+  }
+  .scr { position:absolute; inset:0; display:grid; grid-template-rows:1fr auto; padding:16px; }
+  .scr-top { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+  .scr-top b { font-size:.72rem; font-weight:700; letter-spacing:.06em; color:rgba(255,255,255,.92); text-shadow:0 1px 5px rgba(0,0,0,.55); }
+  .scr-dot { width:8px; height:8px; border-radius:50%; background:#fff; box-shadow:0 0 11px rgba(255,255,255,.85); flex:none; }
+  .scr-cap {
+    margin-top:auto; padding:9px 13px; border-radius:9px;
+    background:var(--panel-bg); border:1px solid var(--line);
+    font:600 .7rem/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    letter-spacing:.02em; color:rgba(255,255,255,.94);
+  }
+  .screen-label {
+    position:absolute; left:0; bottom:40%;
+    font:700 .7rem/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    letter-spacing:.05em; color:var(--mut);
+  }
+  .controller {
+    position:absolute; right:1%; bottom:2%;
+    width:22px; height:62px; padding:4px;
+    background:var(--card); border:1px solid var(--line); border-radius:9px;
+    box-shadow:var(--shadow); transform:rotate(13deg);
+  }
+  .stick { display:block; width:14px; height:14px; margin:0 auto; border-radius:50%; border:2px solid var(--acc2); }
+  .controller::after { content:""; display:block; margin:7px auto 0; width:14px; height:4px; border-radius:2px; background:var(--scene-tint); }
+
+  /* ---------- facts strip ---------- */
+  .facts { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line2); border:1px solid var(--line2); border-radius:14px; overflow:hidden; margin-top:2.8rem; }
+  .fact { background:var(--bg); padding:1.2rem 1.25rem; }
+  .fact b { display:block; font-size:1.55rem; line-height:1.1; letter-spacing:-.028em; margin-bottom:.2rem; }
+  .fact span { font-size:.82rem; color:var(--mut); }
+
+  /* ---------- sections ---------- */
+  section.blk { padding:4.3rem 0; border-top:1px solid var(--line2); }
+  .eyebrow { display:block; font-size:.76rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-text); margin-bottom:.6rem; }
+  h2 { font-size:clamp(1.75rem,3.1vw,2.42rem); letter-spacing:-.028em; margin:0 0 .75rem; }
+  .intro { color:var(--mut); max-width:58ch; font-size:1.07rem; }
+
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:2.2rem; }
+  .card { background:var(--card); border:1px solid var(--line2); border-radius:16px; padding:1.5rem; box-shadow:var(--shadow); }
+  .card h3 { font-size:1.09rem; margin:0 0 .45rem; }
+  .card p { font-size:.95rem; line-height:1.64; color:var(--mut); }
+  .card p strong { color:var(--ink); font-weight:640; }
+  .ico { width:38px; height:38px; border-radius:10px; display:grid; place-items:center; background:var(--code-bg); color:var(--accent-text); margin-bottom:1rem; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-weight:700; font-size:1.02rem; letter-spacing:0; }
+  .ico i { font-style:normal; font-size:.62em; vertical-align:baseline; position:relative; top:-.12em; }
+
+  .modes { margin-top:2.2rem; border:1px solid var(--line2); border-radius:14px; overflow:hidden; background:var(--card); }
+  .modes > div { display:grid; grid-template-columns:11.5rem 1fr 11rem; gap:1rem; align-items:center; padding:1rem 1.25rem; }
+  .modes > div + div { border-top:1px solid var(--line2); }
+  .modes h4 { margin:0; font-size:.98rem; letter-spacing:-.005em; }
+  .modes p { margin:0; font-size:.9rem; line-height:1.5; color:var(--mut); }
+  .modes p strong { color:var(--ink); font-weight:640; }
+  .pills { display:flex; gap:.35rem; flex-wrap:wrap; justify-content:flex-end; }
+  .pill { font:600 .72rem/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; padding:.34rem .5rem; border:1px solid var(--line); border-radius:6px; color:var(--mut); letter-spacing:.01em; }
+  .pill:hover { color:var(--ink); border-color:var(--line); }
+
+  .note { margin-top:1.8rem; padding:1.25rem 1.4rem; background:var(--card2); border:1px solid var(--line2); border-left:3px solid var(--acc2); border-radius:0 12px 12px 0; }
+  .note p { font-size:.97rem; color:var(--mut); }
+  .note p + p { margin-top:.55rem; }
+  .note h4 { margin:0 0 .45rem; font-size:1rem; }
+  .note p strong { color:var(--ink); font-weight:640; }
+  
+  
+  
+  
+
+  
+  
+  .split p + p { margin-top:.9rem; }
+  
+
+  .kbd { display:grid; grid-template-columns:15.5rem 1fr; gap:1rem; padding:1rem 1.25rem; border-bottom:1px solid var(--line2); font-size:.95rem; }
+  .keys { display:flex; gap:.35rem; flex-wrap:wrap; }
+  .key { display:inline-flex; align-items:center; justify-content:center; min-width:2.05rem; height:1.72rem; padding:0 .5rem; background:var(--code-bg); border:1px solid var(--line); border-radius:7px; font:700 .78rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; color:var(--ink); }
+  .key.alt { color:var(--mut); }
+
+  .privacy { display:grid; grid-template-columns:1fr 1fr; gap:2.2rem; align-items:start; margin-top:2.2rem; }
+  .checklist { list-style:none; padding:0; }
+  .checklist li { padding:.82rem 0; border-bottom:1px solid var(--line2); font-size:.97rem; }
+  .checklist li:last-child { border-bottom:0; }
+  .check { color:var(--acc2); font-weight:700; margin-right:.5rem; }
+  .contactcard { background:var(--card); border:1px solid var(--line2); border-radius:14px; padding:1.4rem 1.5rem; box-shadow:var(--shadow); }
+  .contactcard h3 { margin:0 0 .7rem; font-size:1.02rem; }
+  .contactcard p { font-size:.95rem; color:var(--mut); }
+  .contactcard p + p { margin-top:.5rem; }
+  .contactcard p strong { color:var(--ink); font-weight:640; }
+
+  .out { padding:1.4rem 0 1.45rem; border-top:1px solid var(--line2); }
+  .out p { font-size:1.06rem; line-height:1.8; }
+  .out p strong { color:var(--ink); font-weight:640; }
+  .out .neg { color:var(--mut); }
+  
+  
+  
+  
+  
+
+  /* ---------- footer ---------- */
+  footer.foot { border-top:1px solid var(--line2); padding:2.6rem 0 3rem; margin-top:2rem; background:var(--bg2); }
+  .fin { display:flex; justify-content:space-between; gap:1.5rem; flex-wrap:wrap; align-items:center; }
+  .flinks { display:flex; gap:1.15rem; flex-wrap:wrap; font-size:.88rem; }
+  .flinks a { color:var(--mut); text-decoration:none; }
+  .flinks a:hover { color:var(--ink); }
+  .flinks span { color:var(--mut); }
+  .ver { font:700 .76rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; color:var(--mut); letter-spacing:.05em; }
+  .sub { margin-top:1.2rem; font-size:.84rem; color:var(--mut); }
+  .sub a { color:var(--accent-text); text-decoration:none; }
+  .sub a:hover { text-decoration:underline; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1000px) {
+    .nav ul { display:none; }
+    .hero-in { grid-template-columns:1fr; gap:3rem; }
+    .hero { padding-top:3.8rem; }
+    .scene { order:-1; }
+    .grid3 { grid-template-columns:1fr 1fr; }
+    .piped { grid-template-columns:1fr 1fr; }
+    .step + .step { background:var(--card); }
+    .step:nth-child(even)::before { content:none; }
+    .split,.privacy,
+    .plate { gap:1.3rem; }
+  }
+  @media (max-width:680px) {
+    .facts { grid-template-columns:1fr 1fr; }
+    .grid3 { grid-template-columns:1fr; }
+    .piped { grid-template-columns:1fr; }
+    .step + .step::before { content:none; }
+    .modes > div { grid-template-columns:1fr; gap:.4rem; }
+    .pills { justify-content:flex-start; }
+    .kbd { grid-template-columns:1fr; gap:.6rem; }
+    .out ul { grid-template-columns:1fr; }
+    .fin { flex-direction:column; align-items:flex-start; }
+    section.blk { padding:3rem 0; }
+    h1.hero-title { font-size:clamp(2.25rem,10.5vw,3rem); }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    html { scroll-behavior:auto; }
   }
 </style>
 </head>
 <body>
 
-<h1>Privacy Policy &mdash; Aera Video Player</h1>
-<p class="updated">Last updated: 2026-09-22</p>
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span><b>Aera</b> Video Player</a>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#formats">Formats</a></li>
+      <li><a href="#controls">Controls</a></li>
+      <li><a href="#privacy">Privacy</a></li>
+    </ul>
+    <a class="iconbtn" href="#privacy" title="Privacy policy" aria-label="Privacy policy">&#128274;</a>
+  </div>
+</header>
 
-<h2>Overview</h2>
-<p>Aera Video Player (the &ldquo;App&rdquo;) is a virtual reality video player. It
-plays video on a screen rendered in VR space, from files stored on your device
-or from WebDAV servers that you configure yourself.</p>
-<p>This App does not collect, sell, share, or transmit any data about you. There
-is no account, no analytics, no advertising, and no third-party service that
-receives data on your behalf.</p>
+<main id="top">
 
-<h2>Information you provide</h2>
-<p>When using the App you may enter:</p>
-<ul>
-  <li>The address of a WebDAV server, together with a username and password</li>
-  <li>Your display preferences (language, passthrough mode, projection settings)</li>
-</ul>
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div>
+        <p class="tagline"><span class="dot" aria-hidden="true"></span>Meta Quest 3 / 3S<span aria-hidden="true">·</span>v1.0.0</p>
+        <h1 class="hero-title">A screen for video that lives in <span class="k">your room</span>.</h1>
+        <p class="lede">Aera puts a real screen into your space and plays video on it. You grab it, move it, size it and turn it with the controllers — and it stays put when you walk away.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://www.meta.com/horizon/store/app/xyz.a243688.sxrvp/">Get it on the Meta store</a>
+          <a class="btn btn-ghost" href="#features">Features</a>
+        </div>
+        <p class="cta-note" style="margin-top:1rem">Submitted 22 September 2026 and awaiting review — it takes a day or two to appear in the store.</p>
+      </div>
 
-<h2>What happens with that information</h2>
-<p><strong>Local storage.</strong> The information above is stored only in the
-App&rsquo;s private storage on your own device. WebDAV addresses, usernames and
-passwords are stored in plain text in the App&rsquo;s private preferences. They
-are not encrypted. Do not enter credentials here that you would not want stored
-unencrypted on your device.</p>
-<p><strong>Network access.</strong> The App contacts only the WebDAV servers that
-you add. When you browse a server, the App sends your username and password to
-that server. WebDAV commonly runs over plain HTTP rather than HTTPS, so
-credentials and media travel unencrypted between your device and your own
-server; enable TLS on your server if you want an encrypted link.</p>
-<p>The App contains no other network endpoint and does not contact any server
-owned by the developer.</p>
+      <div class="scene" aria-hidden="true">
+        <div class="stage">
+          <span class="beam"></span><span class="beam"></span>
+          <div class="screen">
+            <div class="glass"></div>
+            <div class="scr">
+              <div class="scr-top"><b>SINTEL — TRAILER</b><span class="scr-dot"></span></div>
+              <div class="scr-cap">SINTEL &mdash; TRAILER</div>
+            </div>
+          </div>
+          <span class="screen-label">world-anchored screen</span>
+          <div class="controller"><span class="stick"></span></div>
+        </div>
+      </div>
+    </div>
 
-<h2>What the App does not do</h2>
-<ul>
-  <li>Does not collect analytics, usage data, or crash reports</li>
-  <li>Does not show advertising or track you across apps</li>
-  <li>Does not require an account</li>
-  <li>Does not read media files unless you add a local source and grant the
-      storage permission</li>
-  <li>Does not upload your media or your library to any server</li>
-  <li>Does not include any third-party analytics, advertising, or tracking SDK</li>
-</ul>
+    <div class="wrap">
+      <div class="facts">
+        <div class="fact"><b>Quest 3 / 3S</b><span>the headsets it runs on</span></div>
+        <div class="fact"><b>4.5&nbsp;MB</b><span>no account, no ads, no analytics</span></div>
+        <div class="fact"><b>Auto</b><span>the right mode for every clip</span></div>
+        <div class="fact"><b>3D</b><span>a screen in your room, not an Android screen</span></div>
+      </div>
+    </div>
+  </section>
 
-<h2>Device data</h2>
-<p>The App needs media storage access so you can play local video files. That
-permission is granted by the operating system and explained by the system prompt
-it displays. Demo footage bundled inside the App is copied to the App&rsquo;s own
-private directory on first launch and never leaves your device.</p>
-<p>The App creates no device backup. All installed data is held in the App&rsquo;s
-private storage and is removed when you uninstall the App.</p>
+  <section class="blk" id="features">
+    <div class="wrap">
+      <span class="eyebrow">What you get</span>
+      <h2>The whole point is the screen.</h2>
+      <p class="intro">Every other VR player gives you a picture. Aera gives you a screen — with position, size and orientation of its own, living in the room you are standing in.</p>
 
-<h2>Children</h2>
-<p>This App is not directed to children under 13 years of age. The App does not
-knowingly collect personal information from anyone.</p>
+      <div class="grid3">
+        <article class="card">
+          <div class="ico" aria-hidden="true">&#9634;</div>
+          <h3>A screen, not a window</h3>
+          <p>It starts <strong>0.8 m in front of you at standing height</strong>. Move your head and it does not move. Its aspect follows the clip, so a portrait video becomes a portrait screen — it is never stretched to fit.</p>
+        </article>
+        <article class="card">
+          <div class="ico" aria-hidden="true">&#8644;</div>
+          <h3>WebDAV and local files</h3>
+          <p>Point it at a server on your own LAN over plain HTTP, or browse your own storage. You can also <strong>&ldquo;Open with&rdquo;</strong> a video from Gallery or Files and land straight in VR. There is no account and no signup.</p>
+        </article>
+        <article class="card">
+          <div class="ico" aria-hidden="true">&#9654;</div>
+          <h3>The formats people actually own</h3>
+          <p>Equirectangular and half-dome panoramas, Oculus stereo fisheye, side-by-side, over-under and half-resolution side-by-side. It reads the container and the filename and picks the right projection itself.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
-<h2>Changes</h2>
-<p>If this policy changes, the date above and the App&rsquo;s store listing are
-updated.</p>
 
-<h2>Contact</h2>
-<p>Questions about this policy: <strong>YOUR_CONTACT_EMAIL</strong></p>
+  <section class="blk" id="formats">
+    <div class="wrap">
+      <span class="eyebrow">Display modes</span>
+      <h2>It figures the clip out.</h2>
+      <p class="intro">Every mode is one tap in the spatial panel. Defaults live in Settings, and the play bar is a per-clip override.</p>
 
-<footer>
-  Aera Video Player &middot; xyz.a243688.sxrvp
+      <div class="modes">
+        <div>
+          <h4>Flat screen</h4>
+          <p>The default. Any ordinary video on a screen you can grab and move.</p>
+          <div class="pills"><span class="pill">16:9</span><span class="pill">4:3</span><span class="pill">9:16</span><span class="pill">21:9</span></div>
+        </div>
+        <div>
+          <h4>360&deg; and 180&deg;</h4>
+          <p>Panoramas wrap around you. Look wherever you like, and turn with the thumbstick.</p>
+          <div class="pills"><span class="pill">360&deg;</span><span class="pill">180&deg;</span></div>
+        </div>
+        <div>
+          <h4>Fisheye VR</h4>
+          <p>Two-lens VR clips, as a surround view. The viewing angle is adjustable, 180&deg; to 220&deg;.</p>
+          <div class="pills"><span class="pill">Surround</span></div>
+        </div>
+        <div>
+          <h4>Stereo 3D</h4>
+          <p>Side by side, top and bottom, and half-width side by side &mdash; with the right image in each eye.</p>
+          <div class="pills"><span class="pill">Side by side</span><span class="pill">Top &amp; bottom</span><span class="pill">Half width</span></div>
+        </div>
+      </div>
+
+      <div class="note">
+        <h4>Fisheye is a dome, not 360&deg;.</h4>
+        <p>A two-lens rig has nothing behind your head, so the back of the dome is empty rather than stretched &mdash; and from this version it is transparent, so you see your real room. A true 360&deg; clip covers everything and stays solid on purpose.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk" id="ar">
+    <div class="wrap">
+      <span class="eyebrow">Passthrough</span>
+      <h2>The video sits in your room.</h2>
+      <p class="intro">Turn the background off and the picture becomes part of the space around you &mdash; it stays where you left it when you step aside.</p>
+
+      <div class="grid3">
+        <article class="card">
+          <div class="ico" aria-hidden="true">&#9670;</div>
+          <h3>Green and magenta screens</h3>
+          <p>Clips shot in front of a flat-coloured background have that background removed for you, with dials for how far to remove it and how soft to make the edge.</p>
+        </article>
+        <article class="card">
+          <div class="ico" aria-hidden="true">&#9635;</div>
+          <h3>Alpha clips just work</h3>
+          <p>Sources that already carry their transparency are used as they come &mdash; nothing to configure, and they combine with any of the options above.</p>
+        </article>
+        <article class="card">
+          <div class="ico" aria-hidden="true">&#8857;</div>
+          <h3>Your room behind it</h3>
+          <p>Wherever the picture is transparent, your real room shows through, so a clip can sit against your wall and stay there while you walk past.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="blk" id="controls">
+    <div class="wrap">
+      <span class="eyebrow">Interaction</span>
+      <h2>Designed for hands that do not look at controls.</h2>
+      <p class="intro">Right controller unless you say otherwise. The screen never follows your head.</p>
+
+      <div class="modes">
+        <div class="kbd"><div class="keys"><span class="key">A</span></div><p>Play / pause. In an image gallery, the previous image. <span class="key alt">B</span> is the next one.</p></div>
+        <div class="kbd"><div class="keys"><span class="key">Trigger</span></div><p>Drag the screen — it follows your hand while held. Pressed on empty space it plays or pauses.</p></div>
+        <div class="kbd"><div class="keys"><span class="key">Trigger</span><span class="key">Trigger</span></div><p>Double-click on empty space to switch the panel on and off, so it is out of the way while you watch.</p></div>
+        <div class="kbd"><div class="keys"><span class="key">Stick Y</span></div><p>Scale the screen, from 0.1&times; to 8&times;.</p></div>
+        <div class="kbd"><div class="keys"><span class="key">Stick X</span></div><p>In panorama modes, rotate the view around the world.</p></div>
+        <div class="kbd"><div class="keys"><span class="key">Grip</span></div><p>Rotate the screen 90&deg; clockwise.</p></div>
+      </div>
+
+      <div class="note">
+        <p><strong>Play/pause is on A, not the trigger.</strong> The trigger is kept for dragging, because on Quest it loses contact too easily to trust as a click.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="blk" id="privacy">
+    <div class="wrap">
+      <span class="eyebrow">Privacy</span>
+      <h2>Nothing leaves the headset.</h2>
+      <p class="intro">No account. No analytics. No ads. No third-party SDK of any kind.</p>
+
+      <div class="privacy">
+        <ul class="checklist">
+          <li><span class="check">&#10003;</span>The only servers it contacts are the WebDAV servers you add yourself.</li>
+          <li><span class="check">&#10003;</span>Nothing is uploaded, and no media leaves the device.</li>
+          <li><span class="check">&#10003;</span>No analytics, no usage telemetry, no crash reporting.</li>
+          <li><span class="check">&#10003;</span>No advertising and no tracking across apps.</li>
+          <li><span class="check">&#10003;</span>No account, no cloud sync, no media library.</li>
+          <li><span class="check">&#10003;</span>WebDAV credentials are stored in plain text, in the app&rsquo;s private storage only.</li>
+        </ul>
+
+        <div class="contactcard">
+          <h3>Read the full policy</h3>
+          <p><a href="privacy-policy.html"><strong>Privacy Policy</strong></a> &mdash; what you can enter, where it goes, and what this app does not do.</p>
+          <p>Last updated 22 September 2026. Questions go to <strong>canyelengxin@gmail.com</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="blk" id="out">
+    <div class="wrap out">
+      <span class="eyebrow">Out of scope</span>
+      <h2>What is deliberately missing.</h2>
+      <p><strong>Not planned:</strong> <span class="neg">spatial audio, HDR, subtitles, several screens at once, a media library, accounts, cloud sync and recommendations.</span></p>
+      <p><strong>Always yours:</strong> <span class="neg">your video never leaves your device, and the app asks for nothing it cannot work without.</span></p>
+    </div>
+  </section>
+
+
+</main>
+
+<footer class="foot">
+  <div class="wrap fin">
+    <div>
+      <a class="brand" href="#top"><span class="logo" aria-hidden="true"></span><b>Aera</b> Video Player</a>
+      <div class="ver">V1.0.0 &middot; xyz.a243688.sxrvp</div>
+    </div>
+    <nav class="flinks" aria-label="Footer">
+      <a href="#features">Features</a>
+      <a href="#formats">Formats</a>
+    </nav>
+  </div>
+  <div class="wrap sub">
+    <p>Released September 2026. Demo footage bundled with the app is <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY</a>. No analytics were used to build this page.</p>
+  </div>
 </footer>
 
 </body>
